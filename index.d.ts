@@ -1,17 +1,17 @@
 /**
  * Create a new error constructor instance.
  */
-declare function makeError(name: string): makeError.BaseErrorConstructor;
+declare function makeError(name: string): makeError.Constructor<makeError.BaseError>;
 
 /**
  * Set the constructor prototype to `BaseError`.
  */
-declare function makeError<T extends typeof Error>(super_: T): T & makeError.BaseErrorConstructor;
+declare function makeError<T extends Error>(super_: { new (...args: any[]): T }): makeError.Constructor<T & makeError.BaseError>;
 
 /**
  * Create a specialized error instance.
  */
-declare function makeError<T extends typeof Error>(name: string | Function, super_: T): T;
+declare function makeError<T extends Error>(name: string | Function, super_: { new (...args: any[]): T }): makeError.Constructor<T>;
 
 declare module makeError {
   /**
@@ -25,9 +25,10 @@ declare module makeError {
     constructor(message: string);
   }
 
-  export interface BaseErrorConstructor {
-    new (message: string): BaseError
+  export interface Constructor <T> {
+    new (message: string): T
     super_: any
+    prototype: T
   }
 }
 
